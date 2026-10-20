@@ -20,9 +20,8 @@ connectScene(bot);
 adminScene(bot);
 
 bot.catch((err) => {
-  console.error('=== Ошибка в боте ===')
-  console.error('update:', JSON.stringify(err.ctx?.update, null, 2))
-  console.error('error:', err.error)
+  console.error('bot error:', err.error?.message || err.message || err)
 });
 
-bot.start();
+bot.start({ drop_pending_updates: true });
+console.log('bot started')

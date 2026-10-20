@@ -7,7 +7,6 @@ const auth = {
   password: YOOKASSA_SECRET_KEY,
 }
 
-// Создаёт платёж и возвращает { id, confirmationUrl, status }
 export async function createPayment(amount, description, metadata, returnUrl) {
   const res = await axios.post(
     'https://api.yookassa.ru/v3/payments',
@@ -20,6 +19,7 @@ export async function createPayment(amount, description, metadata, returnUrl) {
     },
     {
       auth,
+      timeout: 15000,
       headers: {
         'Idempotence-Key': randomUUID(),
         'Content-Type': 'application/json',
@@ -34,8 +34,10 @@ export async function createPayment(amount, description, metadata, returnUrl) {
   }
 }
 
-// Возвращает текущий статус платежа: 'pending' | 'waiting_for_capture' | 'succeeded' | 'canceled'
 export async function getPaymentStatus(paymentId) {
-  const res = await axios.get(`https://api.yookassa.ru/v3/payments/${paymentId}`, { auth })
+  const res = await axios.get(`https://api.yookassa.ru/v3/payments/${paymentId}`, {
+    auth,
+    timeout: 15000,
+  })
   return res.data.status
 }
